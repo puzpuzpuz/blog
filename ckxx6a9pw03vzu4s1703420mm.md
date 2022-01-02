@@ -1,6 +1,6 @@
 ## Scalable Readers-Writer Lock
 
-Locks, or mutexes (mutual exclusions), are probably the most basic concurrency primitives. It's hard to find a developer who won't be able to explain a mutex, at least on the fundamental level. Yet, mutexes are more than that. They may be:
+Locks, or mutexes (mutual exclusions), are one of the most basic concurrency primitives. It's hard to find a developer who won't be able to explain a mutex, at least on the fundamental level. Yet, mutexes are more than that. They may be:
 * OS-level (think, a pthread mutex) or user-land (think, a spinlock),
 * expose pessimistic (blocking) or optimistic (non-blocking) locking API,
 * provide fairness in lock acquisition or keep things unfair,
