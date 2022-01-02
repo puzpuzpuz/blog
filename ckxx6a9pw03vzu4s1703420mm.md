@@ -10,7 +10,7 @@ Locks, or mutexes (mutual exclusions), are one of the most basic concurrency pri
 
 Today we focus on asymmetric, readers-writer locks which are [familiar](https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/locks/ReadWriteLock.html) to most Java developers. Such locks allow concurrent readers to proceed with executing their critical section, while writers are guaranteed to acquire exclusive ownership of the lock. These locks are used in scenarios where the vast majority of calls come from readers and writers acquire the lock rather infrequently.
 
-Our ultimate goal is to come up with a lock implementation that would scale read operations linearly in terms of CPU core count and compare it with alternatives such as  [`ReentrantReadWriteLock`](https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/locks/ReentrantReadWriteLock.html) class from the standard library.
+Our ultimate goal is to come up with a lock implementation that would scale reader operations linearly in terms of the CPU core count and compare the result with alternatives such as  [`ReentrantReadWriteLock`](https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/locks/ReentrantReadWriteLock.html) class from the standard library.
 
 ## Prior art
 
