@@ -6,7 +6,8 @@ Locks, or mutexes (mutual exclusions), are one of the most basic concurrency pri
 * provide fairness in lock acquisition or keep things unfair,
 * support reentrant calls, or prefer to be non-reentrant,
 * have a notion of asymmetry in locking (say, with a shared lock available for readers) or stick to symmetric, exclusive locking,
-* strictly require unlocking on the same thread (a pthread mutex, once again) or prefer not to bother with unlocker's identity (`sync.Mutex` in Golang).
+* strictly require unlocking on the same thread (a pthread mutex, once again) or prefer not to bother with unlocker's identity (`sync.Mutex` in Golang),
+* support timed-based cancellation for locking attempts or have non-abortable calls only.
 
 Today we focus on asymmetric, readers-writer locks which are [familiar](https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/locks/ReadWriteLock.html) to most Java developers. Such locks allow concurrent readers to proceed with executing their critical section, while writers are guaranteed to acquire exclusive ownership of the lock. These locks are used in scenarios where the vast majority of calls come from readers and writers acquire the lock rather infrequently.
 
