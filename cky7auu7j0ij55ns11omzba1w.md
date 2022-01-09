@@ -1,4 +1,4 @@
-## Benchmarking Non-Shared Locks in Java
+## Benchmarking ReentrantLock vs. custom spinlocks
 
 [Last time](https://puzpuzpuz.io/scalable-readers-writer-lock) we discussed scalability of `j.u.c.l.ReentrantReadWriteLock` and some alternatives. Some of the alternatives used a simple CAS (compare-and-swap) based spinlock as the internal writer lock. So, I was curious whether such custom spinlock makes sense against what we have in the standard library. This brief post is dedicated to benchmarking the `ReentrantLock` class against a number of alternatives.
 
