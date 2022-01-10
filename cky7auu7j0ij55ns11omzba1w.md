@@ -1,6 +1,6 @@
-## Benchmarking non-shared locks in Java
+## Benchmarking Non-shared Locks in Java
 
-[Last time](https://puzpuzpuz.io/scalable-readers-writer-lock) we discussed scalability of `j.u.c.l.ReentrantReadWriteLock` and some alternatives. Some of the alternatives used a simple CAS (compare-and-swap) based spinlock as the internal writer lock. So, I was curious whether such custom spinlock makes sense against what we have in the standard library. This brief post is dedicated to benchmarking the `ReentrantLock` class against a number of alternatives.
+[Last time](https://puzpuzpuz.io/scalable-readers-writer-lock) we discussed scalability of `j.u.c.l.ReentrantReadWriteLock` and some alternatives. Some of the alternatives used a simple CAS (compare-and-swap) based spinlock as the internal writer lock. So, I was curious whether such custom spinlock makes sense against what we have in the standard library. This brief post is dedicated to benchmarking the `ReentrantLock` class against a number of other non-shared (exclusive) locks.
 
 Before we go any further, I have to warn readers that the considered alternative lock implementations are not production-ready in any sense, so use them at your own risk. The below results were obtained on concrete HW and SW and may change a lot in a different scenario and not only. Needless to that that using a single lock on the hot path is usually a bad idea. I advise going with the standard library as the default choice. So, consider this post to be an unfair, non-scientific experiment done out of curiosity.
 
