@@ -78,7 +78,7 @@ Finally, we're going compare our queue with the good old `j.u.c.ArrayBlockingQue
 
 The benchmark we'll be running is available [here](https://github.com/puzpuzpuz/java-concurrency-samples/blob/6eb2c14e5cc7476a268606c94abb722c2e6f1e81/src/test/java/io/puzpuzpuz/queue/SpscQueueBenchmark.java). When run, it starts a couple of threads to play a ping-pong game. Each operation, a.k.a. a ping-pong round, assumes sending/receiving a single item over the SPSC queue combined with a bit of work done for each successful attempt.
 
-Here is the reduced JMH benchmark output on my laptop running Ubuntu 20.04 and OpenJDK 17.0.4 64-bit:
+Here is a reduced JMH benchmark output on my laptop running Ubuntu 20.04 and OpenJDK 17.0.4 64-bit:
 ```
 Benchmark                                            (type)   Mode  Cnt          Score          Error  Units
 SpscQueueBenchmark.group                         SPSC_QUEUE  thrpt    3  107503612.612 ± 16230253.288  ops/s
