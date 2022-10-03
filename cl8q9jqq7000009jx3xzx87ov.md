@@ -34,7 +34,7 @@ public class SpscBoundedQueue<E> {
 
 Here, we have an array of queue elements plus a number of index fields where consumer and producer each get a pair of `PaddedAtomicInteger`. The `PaddedAtomicInteger` is basically the standard `j.u.c.a.AtomicInteger` class with some padding added to prevent [false sharing](https://en.wikipedia.org/wiki/False_sharing). Alternatively, we could keep the memory layout flat with all indexes declared as primitive fields right in the `SpscBoundedQueue` class, but this would make the code much less readable.
 
-You may also notice that the `offer()` and `poll()` methods are blocking. Again, that's to keep the code compact and readable. Adding optimistic, as well as batch flavors of the methods is simple enough and left as an exercise for curious readers.
+You may also notice that only `offer()` and `poll()` methods are implemented. Again, that's to keep the code compact and readable. Adding other useful methods, like the batch flavor ones, is simple enough and left as an exercise for curious readers.
 
 The array of queue items is used as a ring buffer of arbitrary size, i.e. there is no power of two restriction for the size like in some ring buffer implementations. The `producerIdx` and `consumerIdx` fields are used to synchronize producer's and consumer's accesses to the array. Both producer and consumer check each other's index to understand if they can insert or read the next item and, if the check succeeds, perform the action and update their own index. Two other fields are used to cache the index seen during the latest check. We'll discuss why such caching improves the end performance in a moment.
 
