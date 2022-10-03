@@ -68,7 +68,7 @@ public boolean offer(E e) {
 }
 ```
 
-The above code uses [acquire/release semantics](https://puzpuzpuz.dev/using-acquirerelease-semantics-in-java-atomics-for-fun-and-profit) to keep the emitted instructions as lightweight as possible from the cache coherency traffic perspective. Other than that, the code does pretty much as what we discussed before.
+The above code uses [acquire/release semantics](https://puzpuzpuz.dev/using-acquirerelease-semantics-in-java-atomics-for-fun-and-profit) to keep the emitted instructions as lightweight as possible from the memory barriers perspective. Other than that, the code does pretty much as what we discussed before.
 
 As it was already mentioned, the manipulations with the `consumerCachedIdx` field are important for the end performance. All reads and writes on this field are thread-local, i.e. only producer threads accesses this field, so we don't need to use costly atomic operations. This reduces cache coherency traffic dramatically and lets the CPU core on its own thread-local data in those cases when there multiple empty slots are available in the queue.
 
