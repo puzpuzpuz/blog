@@ -70,7 +70,7 @@ public boolean offer(E e) {
 
 The above code uses [acquire/release semantics](https://puzpuzpuz.dev/using-acquirerelease-semantics-in-java-atomics-for-fun-and-profit) to keep the emitted instructions as lightweight as possible from the memory barriers perspective. Other than that, the code does pretty much as what we discussed before.
 
-As it was already mentioned, the manipulations with the `consumerCachedIdx` field are important for the end performance. All reads and writes on this field are thread-local, i.e. only producer threads accesses this field, so we don't need to use costly atomic operations. This reduces cache coherency traffic dramatically and lets the CPU core on its own thread-local data in those cases when there multiple empty slots are available in the queue.
+As it was already mentioned, the manipulations with the `consumerCachedIdx` field are important for the end performance. All reads and writes on this field are thread-local, i.e. only the producer thread accesses this field, so we don't need to use costly atomic operations. This reduces cache coherency traffic dramatically and lets the CPU core on its own non-shared data in those cases when there multiple empty slots are available in the queue.
 
 Consumer's part of the picture may be seen in the full source code available [here](https://github.com/puzpuzpuz/java-concurrency-samples/blob/6eb2c14e5cc7476a268606c94abb722c2e6f1e81/src/main/java/io/puzpuzpuz/queue/SpscBoundedQueue.java).
 
