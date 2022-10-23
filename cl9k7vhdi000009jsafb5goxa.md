@@ -18,7 +18,7 @@ v, loaded := m.LoadOrCompute(point{42, 42}, func() int {
 })
 ```
 
-The above wasn't possible until xsync v1.5.0. That's because the generic version of the concurrent map available in the library supported only `string` keys. But now you can use any `comparable` type as a key, so `xsync.MapOf` became a real alternative to the good old `sync.Map`. Today we're going to discuss the recent changes in the data structure that allowed using arbitrary key types and also do some (as always, non-scientific) microbenchmarking.
+The above wasn't possible until xsync v1.5.0. That's because the generic version of the concurrent map available in the library supported only `string` keys. But now you can use any `comparable` type as a key, so `xsync.MapOf` became a real, more scalable alternative to the good old `sync.Map`. Today we're going to discuss the recent changes in the data structure that allowed using arbitrary key types and also do some (as always, non-scientific) microbenchmarking.
 
 ### The challenges
 
