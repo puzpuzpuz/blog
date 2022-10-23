@@ -55,11 +55,13 @@ At this point you may be asking yourself if it's using a non-standard map is wor
 
 ### The promised benchmarks
 
-The following results were obtained on i7-1185G7, Ubuntu 22.04 x86-64 and Go 1.19.2. The benchmark source code itself can be found in the xsync repo.
+The following results were obtained on i7-1185G7, Ubuntu 22.04 x86-64 and Go 1.19.2. The benchmark source code itself can be found in the [xsync repo](https://github.com/puzpuzpuz/xsync).
 
 We start with a benchmark that uses a pre-warmed map with 1,000 key/value pairs. The keys are `string`s while the values are `int`s. The benchmark uses all 8 goroutines to load all 8 HT cores available on the machine. Each goroutine selects a key randomly and executes either `Load`, `Store` or `Delete` operation on it.
 
 ![map-8c-1k.png](https://cdn.hashnode.com/res/hashnode/image/upload/v1666460218809/kPTAb9-LF.png align="left")
+
+Here, the x axis stands for the percentage of `Load` operation while the two remaining operations have equal chances to be called, e.g. for the 90% value we have 90% of `Load` calls, 5% of `Store`s and 5% of `Delete`s. The y axis stands for the average time in nanoseconds spend on an operation.
 
 Things get even more interesting with 1M key/value pairs.
 
