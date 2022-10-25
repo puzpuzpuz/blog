@@ -28,7 +28,7 @@ But `xsync.Map` is different as it was aimed to replace `sync.Map` in the same s
 
 The original version of the map was non-generic, so you had to deal with unpleasant `interface{}` rituals in your code. When Go got a stable version of generics, [Viacheslav Poturaev](https://github.com/vearutop) [contributed](https://github.com/puzpuzpuz/xsync/pull/34) a generics-friendly version of the map, `xsync.MapOf`. This was a nice step forward, but it still supported `string` keys only.
 
-A few month ago, the library repo received a [pull request](https://github.com/puzpuzpuz/xsync/pull/46) from [Rob Mason](https://github.com/iamcalledrob). The goal was to allow arbitrary `comparable` types for keys while maintaining backwards compatibility. Since Golang doesn't expose the built-in hash functions (xsync uses a hack to access the hash function for `string` type, but it's tricky to access functions for other types), the hash function has to be provided by the user which isn't a big deal. The only problem was the layout of the data structure.
+A few month ago, the library repo received a [pull request](https://github.com/puzpuzpuz/xsync/pull/46) from [Rob Mason](https://github.com/iamcalledrob). The goal was to allow arbitrary `comparable` types for keys while maintaining backwards compatibility. Since Golang doesn't expose the built-in hash functions except for what's in the `hash/maphash` package, the hash function has to be provided by the user which isn't a big deal. The only problem was the layout of the data structure.
 
 Each bucket in the underlying hash table had the following structure:
 
