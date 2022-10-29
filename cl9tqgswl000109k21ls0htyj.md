@@ -1,4 +1,4 @@
-# Thread-Local State in Go, huh?
+# Thread-Local State in Go, Huh?
 
 We all know that there is no such thing as thread-local state in Go. Yet, there is a trick that would help you to retain the thread identity at least on the hot path. This trick would be helpful if you're trying to implement a [striped counter](https://github.com/puzpuzpuz/xsync#counter) (wink-wink, `j.u.c.a.LongAdder` from Java), or a [BRAVO lock](https://github.com/puzpuzpuz/xsync#rbmutex), or any kind of a data structure with striped state.
 
