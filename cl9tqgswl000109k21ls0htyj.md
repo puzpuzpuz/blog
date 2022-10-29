@@ -89,7 +89,7 @@ func (c *Counter) Add(delta int64) {
 }
 ```
 
-Here, in the `Add` method, we're using the pointer to the `ptoken` struct to calculate the exact counter stripe to be used. It's nothing, but an optimization that relies on the fact that Golang has a non-moving garbage collector. We could use a RNG or an monotonic sequence here with the same effect.
+Here, in the `Add` method, we're using the pointer to the `ptoken` struct to calculate the exact counter stripe to be used. It's nothing, but a code simplification. We could use a RNG or an monotonic sequence here with more or less the same effect. A natural next step which I'm planning for one of the future versions of the library is to use a CAS-based loop instead of atomic increments, just like Java's `LongAdder` does it. This would allow the threads to self-organize and avoid contention due to unlucky thread-to-stripe distribution.
 
 You may ask if piggybacking on a `sync.Pool`'s implementation detail is worth hassle. My answer would be "no, unless you really know what you're doing". Say, single-threaded performance of a primitive atomic `int64` would be better. There is also an overhead in the `Value()` method since it needs to read values from all stripes. So, this trick is certainly from the "don't try that at home" category. But if you aim for scalability of your write operations, it's certainly worth it:
 ```
@@ -104,7 +104,7 @@ PASS
 ok  	github.com/puzpuzpuz/xsync/v2	2.781s
 ```
 
-Both `Map` and `MapOf`, concurrent hash maps from [`xsync` library](https://github.com/puzpuzpuz/xsync), use `Counter` internally to track the current map size. Naturally, they do a counter increment or decrement on each write operation, but read the counter value rarely when a resize happens.
+Both `Map` and `MapOf`, concurrent hash maps from [`xsync` library](https://github.com/puzpuzpuz/xsync), use a variation of a striped counter internally to track the current map size. Naturally, they do a counter increment or decrement on each write operation, but read the counter value rarely when a resize happens.
 
 One more example of application of this trick is [`RBMutex`](https://github.com/puzpuzpuz/xsync#rbmutex), a reader biased reader/writer mutual exclusion lock that implements BRAVO algorithm. I'm leaving learning the internals of this one to the curious reader.
 
