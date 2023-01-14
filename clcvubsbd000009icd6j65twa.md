@@ -7,7 +7,7 @@ To be slightly more concrete, here is a simple example of a query that can benef
 ```sql
 SELECT sensor_id, max(temp), min(temp), avg(temp)
 FROM temperature
-WHERE sensor_id = (402, 1202, 3983)
+WHERE sensor_id IN (402, 1202, 3983)
 GROUP BY sensor_id;
 ```
 
