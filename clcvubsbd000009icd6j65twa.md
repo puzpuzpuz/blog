@@ -11,7 +11,7 @@ WHERE sensor_id IN (402, 1202, 3983)
 GROUP BY sensor_id;
 ```
 
-To be able to use the scatter-gather model, the storage format used in the database needs to support parallelism, i.e. it should be possible to divide the on-disk data into individual parts that can be independently scanned. In practice, this usually means log-structured append-only storage format which is in many cases also columnar, but this is not a [must-have](https://www.postgresql.org/docs/15/parallel-plans.html#PARALLEL-AGGREGATION) requirement.
+To be able to use the scatter-gather model, the storage format used in the database needs to support parallelism, i.e. it should be possible to divide the on-disk data into individual parts that can be independently scanned. In practice, this usually means log-structured append-only storage format (which is in many cases also columnar) but [not necessarily](https://www.postgresql.org/docs/15/parallel-plans.html#PARALLEL-AGGREGATION).
 
 Now, let's consider the execution of the above query.
 
