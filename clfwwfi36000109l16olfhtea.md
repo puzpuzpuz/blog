@@ -4,6 +4,7 @@ seoDescription: "What kind of durability guarantees fsync system call provides i
 datePublished: Fri Mar 31 2023 18:49:29 GMT+0000 (Coordinated Universal Time)
 cuid: clfwwfi36000109l16olfhtea
 slug: the-secret-life-of-fsync
+cover: https://cdn.hashnode.com/res/hashnode/image/stock/unsplash/OQxJd-eGuhg/upload/00acb4791d49fbed3c3bdc3a6c9b5207.jpeg
 tags: linux, databases
 
 ---
