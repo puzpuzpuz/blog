@@ -1,6 +1,6 @@
 ---
 title: "Seqlock-Based Atomic Memory Snapshots"
-seoDescription: "We discuss seqlock-based atomic snapshots as an alternative k-word CAS algorithm in situations when your writes are infrequent and single-writer limitation"
+seoDescription: "We discuss seqlock-based atomic snapshots as an alternative to the k-word CAS algorithm when writes are infrequent and single-writer limitation is fine."
 datePublished: Sun Aug 06 2023 11:10:02 GMT+0000 (Coordinated Universal Time)
 cuid: clkzcdoqo000i0amr1es04tmn
 slug: seqlock-based-atomic-memory-snapshots
