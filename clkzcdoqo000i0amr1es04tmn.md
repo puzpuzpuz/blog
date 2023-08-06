@@ -1,9 +1,9 @@
 ---
-title: "Seqlock-Based Atomic Memory Snapshot"
+title: "Seqlock-Based Atomic Memory Snapshots"
 seoDescription: "We discuss seqlock-based atomic snapshots as an alternative k-word CAS algorithm in situations when your writes are infrequent and single-writer limitation"
 datePublished: Sun Aug 06 2023 11:10:02 GMT+0000 (Coordinated Universal Time)
 cuid: clkzcdoqo000i0amr1es04tmn
-slug: seqlock-based-atomic-memory-snapshot
+slug: seqlock-based-atomic-memory-snapshots
 cover: https://cdn.hashnode.com/res/hashnode/image/stock/unsplash/mdgMbYfFlSA/upload/dca4ca8fa58a9751367c20813364de08.jpeg
 tags: algorithms, multithreading, concurrency
 
