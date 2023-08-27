@@ -48,7 +48,7 @@ public class AtomicLongTuple {
 }
 ```
 
-Here we have the tuple, i.e. 3 `long` fields, plus one more `long` field called `version` . As we'll see now, the version is needed to implement the seqlock. Of course, the above code doesn't include boring details such as padding or `VarHandle` initialization, but you may find the full source code [here](https://github.com/puzpuzpuz/java-concurrency-samples/blob/e180af67323b324e2d69f8cce422e1d9b618b2c6/src/main/java/io/puzpuzpuz/atomic/AtomicLongTuple.java).
+Here we have the tuple, i.e. 3 `long` fields, plus one more `long` field called `version` . As we'll see now, the version is needed to implement the seqlock. Of course, the above code doesn't include boring details such as padding or `VarHandle` initialization, but you may find the full source code [here](https://github.com/puzpuzpuz/java-concurrency-samples/blob/dc6160b0eb4d4a9badbced202fe8f3e4001a47f3/src/main/java/io/puzpuzpuz/atomic/AtomicLongTuple.java).
 
 To learn about the seqlock, let's start with the `write()` method:
 
@@ -105,13 +105,13 @@ public void read(TupleHolder holder) {
             continue;
         }
 
-        // We don't want the below loads to bubble up, hence the fence.
-        VarHandle.loadLoadFence();
-
         // Read the tuple.
         holder.x = (long) VH_X.getOpaque(this);
         holder.y = (long) VH_Y.getOpaque(this);
         holder.z = (long) VH_Z.getOpaque(this);
+
+        // We don't want the below load to bubble up, hence the fence.
+        VarHandle.loadLoadFence();
 
         final long currentVersion = (long) VH_VERSION.getAcquire(this);
         if (currentVersion == version) {
