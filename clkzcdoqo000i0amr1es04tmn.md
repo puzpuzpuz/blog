@@ -48,7 +48,7 @@ public class AtomicLongTuple {
 }
 ```
 
-Here we have the tuple, i.e. 3 `long` fields, plus one more `long` field called `version` . As we'll see now, the version is needed to implement the seqlock. Of course, the above code doesn't include boring details such as padding or `VarHandle` initialization, but you may find the full source code [here](https://github.com/puzpuzpuz/java-concurrency-samples/blob/dc6160b0eb4d4a9badbced202fe8f3e4001a47f3/src/main/java/io/puzpuzpuz/atomic/AtomicLongTuple.java).
+Here we have the tuple, i.e. 3 `long` fields, plus one more `long` field called `version` . As we'll see now, the version is needed to implement the seqlock. Of course, the above code doesn't include boring details such as padding or `VarHandle` initialization, but you may find the full source code [here](https://github.com/puzpuzpuz/java-concurrency-samples/blob/5bdfc514a859867e90ab36217f952a32835f94ea/src/main/java/io/puzpuzpuz/atomic/AtomicLongTuple.java).
 
 To learn about the seqlock, let's start with the `write()` method:
 
@@ -123,7 +123,7 @@ public void read(TupleHolder holder) {
 
 The reader's code is even simpler than the writer's one. Each reader spins trying to read an even version, then reads the tuple state. Finally, it reads the version once again and compares it with the previously read value. If the value hasn't changed, the reader was able to read the tuple atomically, so the operation finishes. Again, the tuple state operations are non-atomic, but thanks to the surrounding operations and fences that's not needed.
 
-A "classical" seqlock assumes a separate sequence number and a mutex. In our case, the `version` field combines the sequence number and the mutex (to be more precise, a spinlock), but that's not really important since the algorithm is the same. Thanks to seqlock, we were able to implement atomic memory snapshots with a few lines of code.
+A "classical" seqlock assumes a separate sequence number and a mutex. Using a mutex over a hand-made spinlock is a wise choice since mutexes in modern runtimes and OSes came a long path and they're not as expensive as they used to be. In our case, the `version` field combines the sequence number and the mutex (to be more precise, a spinlock). For educational purposes, that's not really important since the algorithm is the same. Thanks to seqlock, we were able to implement atomic memory snapshots with a few lines of code.
 
 As you may have noticed, the algorithm is not lock-free since if a writer thread gets blocked after it has incremented the version to an odd value, no readers and writers would be able to make progress. Considering this, you may be asking yourself how practical this approach is. It's certainly not versatile and only makes sense in use cases when the writes are infrequent and the total amount of memory to be read stays within a few cache lines (ideally, within a single cache line, i.e. 64 bytes on most modern machines). In other scenarios, it's better to use a good old exclusive or [shared](https://puzpuzpuz.dev/scalable-readers-writer-lock) mutex.
 
