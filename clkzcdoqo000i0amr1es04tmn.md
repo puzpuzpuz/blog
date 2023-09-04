@@ -63,15 +63,14 @@ public void write(Consumer<TupleHolder> writer) {
         }
 
         // Try to update the version to an odd value (write intent).
-        final long currentVersion = (long) VH_VERSION.compareAndExchangeRelease(this, version, version + 1);
+        // We don't use compareAndExchangeRelease here to avoid
+        // an additional full fence following this operation.
+        final long currentVersion = (long) VH_VERSION.compareAndExchange(this, version, version + 1);
         if (currentVersion != version) {
             // Someone else started writing. Back off and try again.
             LockSupport.parkNanos(10);
             continue;
         }
-
-        // We don't want the below loads and stores to bubble up, hence the fence.
-        VarHandle.fullFence();
 
         // Apply the write.
         writerHolder.x = (long) VH_X.getOpaque(this);
