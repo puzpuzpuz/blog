@@ -38,7 +38,7 @@ public class AtomicLongTuple {
 
     // Readers provide a holder to avoid an allocation.
     public void read(TupleHolder holder) {
-        // Impplementation goes here...
+        // Implementation goes here...
     }
 
     // Writers provide a function to modify the latest state.
