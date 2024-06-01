@@ -1,4 +1,13 @@
-# Multithreaded Scatter-Gather Execution Model for Analytical Queries
+---
+title: "Multithreaded Scatter-Gather Execution Model for Analytical Queries"
+seoDescription: "We're discussing an approach used in some analytical databases to speed up the execution of queries. The model is usually referred to as "scatter-gather"."
+datePublished: Sat Jan 14 2023 11:03:43 GMT+0000 (Coordinated Universal Time)
+cuid: clcvubsbd000009icd6j65twa
+slug: multithreaded-scatter-gather-execution-model-for-analytical-queries
+cover: https://cdn.hashnode.com/res/hashnode/image/stock/unsplash/fqoq39Jj5us/upload/02a80c024138f526960cd112ada0fb6e.jpeg
+tags: databases, multithreading, distributed-system
+
+---
 
 Today we'll be discussing an approach used in some analytical databases to speed up the execution of queries at the cost of additional HW resources, namely CPU cores and memory. The query execution model is usually referred to as "scatter-gather", yet it's hard to find an article with a good amount of detail for this model (at least, I failed to do that), so I decided to write a brief post on the topic.
 
@@ -17,7 +26,7 @@ Now, let's consider the execution of the above query.
 
 ### Scatter
 
-For the sake of simplicity, let's assume that there is no index on the \`sensor\_id\` column and table columns are stored in append-only log files. In this case, it's trivial to split the log files to be scanned into N chunks based on offsets. That's basically what the original thread does when scattering the query execution. Each of the chunks is serialized into a task object/struct along with the query execution plan details, such as selected columns, aggregate functions and filter, and written into an in-memory queue to be picked up by worker threads.
+For the sake of simplicity, let's assume that there is no index on the \`sensor\_id\` column, and table columns are stored in append-only log files. In this case, it's trivial to split the log files to be scanned into N chunks based on offsets. That's basically what the original thread does when scattering the query execution. Each of the chunks is serialized into a task object/struct along with the query execution plan details, such as selected columns, aggregate functions and filter, and written into an in-memory queue to be picked up by worker threads.
 
 Let's refer to the original thread as the orchestrator thread. If the original thread belongs to the same thread pool, it must participate as a worker, i.e. it should poll tasks from the queue and execute them. That's to avoid starvation and deadlocks in the situation when all threads try to orchestrate their own queries.
 
@@ -45,7 +54,7 @@ As soon as the orchestrator gathers and merges the last task result, it has the 
 
 Scatter-gather(-merge) is a simple single-stage execution model. It works nicely for relatively trivial GROUP BY queries with an optional WHERE clause while more complex queries involving JOINs require a more complex multi-stage parallel execution.
 
-Of course, [Amdahl's law](https://en.wikipedia.org/wiki/Amdahl%27s_law) applies to the scatter-gather model, so if the serial part of the total work is significant, the speed up from parallelism will be humble. But if the database uses blocking disk I/O, there might be a benefit even in the degenerate case when each group has a single row to be scanned.
+Of course, [Amdahl's law](https://en.wikipedia.org/wiki/Amdahl%27s_law) applies to the scatter-gather model, so if the serial part of the total work is significant, the speed up from parallelism will be humble. This may be fixed by [an approach](https://duckdb.org/2022/03/07/aggregate-hashtable.html) similar to radix-partitioning. The idea is to split each worker's hash table into a fixed number of hash tables based on a few of the highest bytes of the hash code. Then at the later stage, the merge can be done in parallel for each set of these hash tables. As a nice side effect, it enables parallelism for later stages like ORDER BY + LIMIT.
 
 One more advantage of this model is that it applies to distributed databases naturally. We can easily swap "thread" with "node" in the above text with no other changes except for the storage requirement. The data has to be sharded across cluster nodes and the orchestrator node has to be aware of the sharding scheme so that it's aware of the data location when it distributes the work.
 
