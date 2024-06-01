@@ -9,7 +9,7 @@ tags: databases, multithreading, distributed-system
 
 ---
 
-Today we'll be discussing an approach used in some analytical databases to speed up the execution of queries at the cost of additional HW resources, namely CPU cores and memory. The query execution model is usually referred to as "scatter-gather", yet it's hard to find an article with a good amount of detail for this model (at least, I failed to do that), so I decided to write a brief post on the topic.
+Today we'll discuss an approach used in some analytical databases to speed up the execution of queries at the cost of additional HW resources, namely CPU cores and memory. The query execution model is usually referred to as "scatter-gather", yet it's hard to find an article with a good amount of detail for this model (at least, I failed to do that), so I decided to write a brief post on the topic.
 
 To be slightly more concrete, here is a simple example of a query that can benefit from scatter-gather execution:
 
@@ -32,7 +32,7 @@ Let's refer to the original thread as the orchestrator thread. If the original t
 
 When a worker thread picks up a task, it starts executing it. It scans through the data, applies the filter (`WHERE` clause) and calculates the intermediate result for each aggregate function (`min`, `max` and `avg` in our example). A convenient way to store the result is a hash table holding `<int, <int, int, float>>` key-value pairs. Here, we use `int` type for the key assuming that `sensor_id` is an integer column and each `<int, int, float>` tuple stands for the intermediate results of our three aggregate functions.
 
-Once a task gets executed, the worker needs to write the intermediate result (hash table) into an in-memory queue to be consumed and gathered by the orchestrator thread.
+Once a task is executed, the worker must write the intermediate result (hash table) into an in-memory queue to be consumed and gathered by the orchestrator thread.
 
 ### Gather (and merge)
 
@@ -56,6 +56,6 @@ Scatter-gather(-merge) is a simple single-stage execution model. It works nicely
 
 Of course, [Amdahl's law](https://en.wikipedia.org/wiki/Amdahl%27s_law) applies to the scatter-gather model, so if the serial part of the total work is significant, the speed up from parallelism will be humble. This may be fixed by [an approach](https://duckdb.org/2022/03/07/aggregate-hashtable.html) similar to radix-partitioning. The idea is to split each worker's hash table into a fixed number of hash tables based on a few of the highest bytes of the hash code. Then at the later stage, the merge can be done in parallel for each set of these hash tables. As a nice side effect, it enables parallelism for later stages like ORDER BY + LIMIT.
 
-One more advantage of this model is that it applies to distributed databases naturally. We can easily swap "thread" with "node" in the above text with no other changes except for the storage requirement. The data has to be sharded across cluster nodes and the orchestrator node has to be aware of the sharding scheme so that it's aware of the data location when it distributes the work.
+Another advantage of this model is that it naturally applies to distributed databases. We can easily swap "thread" with "node" in the above text with no other changes except for the storage requirement. The data has to be sharded across cluster nodes and the orchestrator node has to be aware of the sharding scheme so that it's aware of the data location when it distributes the work.
 
 I'm interested in learning more about analytical query execution models and not only, so if you have anything to share, don't hesitate to write a comment. Have fun coding and see you next time.
