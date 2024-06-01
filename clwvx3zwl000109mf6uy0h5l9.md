@@ -4,6 +4,7 @@ seoDescription: "mmap is a controversial topic among the database community. But
 datePublished: Sat Jun 01 2024 09:35:46 GMT+0000 (Coordinated Universal Time)
 cuid: clwvx3zwl000109mf6uy0h5l9
 slug: an-mmap-based-hash-table-optimization
+cover: https://cdn.hashnode.com/res/hashnode/image/stock/unsplash/NIJuEQw0RKg/upload/b057886190582173a306c4057f3e9e4e.jpeg
 tags: performance, databases, data-structures
 
 ---
